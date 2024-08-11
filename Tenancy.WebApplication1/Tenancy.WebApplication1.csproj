@@ -14,4 +14,8 @@
     <Folder Include="Controllers\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Tenancy.Infrastructure\Tenancy.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>
