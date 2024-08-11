@@ -1,0 +1,6 @@
+@Tenancy.WebApplication1_HostAddress = http://localhost:5006
+
+GET {{Tenancy.WebApplication1_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
