@@ -1,4 +1,7 @@
-using Tenancy.Infrastructure.Settings;
+using Tenancy.WebApplication1.Configurations;
+using Tenancy.Infrastructure;
+using Tenancy.Core;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,13 +9,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-TenantSettings tenantSettings = new();
-builder.Configuration.GetSection(nameof(TenantSettings)).Bind(tenantSettings);
+builder.Services
+    .AddApplicationServices()
+    .AddInfrastructure()
+    .AddTenancy(builder.Configuration);
+
 
 
 var app = builder.Build();
