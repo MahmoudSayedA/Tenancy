@@ -1,0 +1,26 @@
+﻿@host = https://localhost:7008
+
+POST {{host}}/api/reports
+Content-Type: application/json
+tenant: elboss
+
+{
+    "title": "new Title 2",
+    "description": "new Description 2",
+    "userId": 1
+}
+
+###
+
+GET {{host}}/api/reports
+tenant: abraji
+
+###
+
+GET {{host}}/api/reports
+tenant: universweb
+
+###
+
+GET {{host}}/api/reports
+tenant: elboss
