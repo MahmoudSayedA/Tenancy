@@ -50,4 +50,4 @@ Contributions are welcome as the project is still under development. Feel free t
 
 ## License
 
-This project will be licensed under the MIT License once complete. See the (LICENSE)[LICENSE] file for more information.
+This project will be licensed under the MIT License once complete. See the [LICENSE](LICENSE) file for more information.
