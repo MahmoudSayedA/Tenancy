@@ -1,21 +1,21 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Tenancy.Core.Contracts;
 using Tenancy.Core.Models;
+using Tenancy.Core.Services.Data;
 
 namespace Tenancy.Infrastructure.Data
 {
-    internal class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : DbContext, IDbContext
     {
         public DbSet<Report> Reports { get; set; }
-        private string _tenantId;
+        public string TenantId { get; set;} = string.Empty;
         private readonly ITenantService _tenantService;
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, ITenantService tenantService) : base(options)
         {
             _tenantService = tenantService;
-            var currentTenant = tenantService.GetCurrentTenant()
-                ?? throw new ArgumentNullException(nameof(tenantService));
+            var currentTenant = _tenantService.GetCurrentTenant();
 
-            _tenantId = currentTenant.TenantId;
+            TenantId = currentTenant?.TenantId ?? string.Empty;
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -32,25 +32,13 @@ namespace Tenancy.Infrastructure.Data
                 //{
                 //    optionsBuilder.UseSqlite(connectionString);
                 //}
-                //else if (dbProvider == "mysql")
-                //{
-                //    optionsBuilder.UseMySql(connectionString);
-                //}
-                //else if (dbProvider == "postgres")
-                //{
-                //    optionsBuilder.UseNpgsql(connectionString);
-                //}
-                //else
-                //{
-                //    throw new NotSupportedException("The provider is not supported");
-                //}
                 base.OnConfiguring(optionsBuilder);
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<IHaveTenant>().HasQueryFilter(r => r.TenantId == _tenantId);
+            modelBuilder.Entity<Report>().HasQueryFilter(r => r.TenantId == TenantId);
             base.OnModelCreating(modelBuilder);
         }
 
@@ -58,7 +46,7 @@ namespace Tenancy.Infrastructure.Data
         {
             foreach (var entry in ChangeTracker.Entries<IHaveTenant>().Where(e => e.State == EntityState.Added))
             {
-                entry.Entity.TenantId = _tenantId;
+                entry.Entity.TenantId = TenantId;
             }
 
             return base.SaveChangesAsync(cancellationToken);
